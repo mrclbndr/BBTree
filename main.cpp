@@ -24,6 +24,9 @@ int main(int argc, char **argv) {
     tree->insert(1001);
     tree->insert(2000);
     tree->print();
+    std::cout << "\n";
+    tree->remove(8);
+    tree->print();
 
     return 0;
 }

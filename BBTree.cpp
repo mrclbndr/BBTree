@@ -11,11 +11,9 @@ bool BBTree::search(const int key) const {
 }
 
 void BBTree::insert(const int key) {
-    if (isEmpty()) {
-        root = new Node(key);
-    } else {
-        root = root->insert(key, alpha);
-    }
+    root = isEmpty()
+           ? new Node(key)
+           : root->insert(key, alpha);
 }
 
 void BBTree::remove(const int key) {
@@ -63,7 +61,38 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
 }
 
 BBTree::Node *BBTree::Node::remove(const int key, const double alpha) {
-    return this;
+    Node *new_root = this;
+    if (this->key == key) {
+        if (left != nullptr && right != nullptr) {
+            int greatest_left_key = left->key;
+            for (Node *greatest_left = left;
+                 greatest_left->right != nullptr;
+                 greatest_left = greatest_left->right, greatest_left_key = greatest_left->key);
+            new_root = new Node(greatest_left_key, left, right);
+            new_root->left = new_root->left->remove(greatest_left_key, alpha);
+        } else if (left != nullptr && right == nullptr) {
+            new_root = left;
+        } else if (left == nullptr && right != nullptr) {
+            new_root = right;
+        } else {
+            new_root = nullptr;
+        }
+    } else if (key < this->key && left != nullptr) {
+        Node *new_left = left->remove(key, alpha);
+        if (new_left == nullptr) {
+            delete left;
+        }
+        left = new_left;
+    } else if (this->key < key && right != nullptr) {
+        Node *new_right = right->remove(key, alpha);
+        if (new_right == nullptr) {
+            delete right;
+        }
+        right = new_right;
+    }
+    return new_root == nullptr
+           ? new_root
+           : new_root->rebalance(alpha);
 }
 
 BBTree::Node *BBTree::Node::rebalance(const double alpha) {
