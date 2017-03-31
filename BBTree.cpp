@@ -60,26 +60,32 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
         int weight_left = left == nullptr
                           ? 1
                           : left->weight;
-        int weight_right = right == nullptr
+        weight = weight_left;
+        weight += right == nullptr
                            ? 1
                            : right->weight;
-        weight = weight_left;
-        weight += weight_right;
 
         double root_balance = weight_left / weight;
         if (root_balance < alpha) {
             // right partial tree heavier than left one
-            double d = 0d;
+            double d = (1 - 2 * alpha) / (1 - alpha); // S. 35f.
             if (root_balance <= d) {
                 // left rotation
+
             } else {
                 // right-left rotation
+
             }
         } else if (root_balance > 1 - alpha) {
             // left partial tree heavier than right one
-            double d = 0d;
-            // right rotation
-            // left-right rotation
+            double d = alpha / (1-alpha); // S. 35f.
+            if (root_balance > d) {
+                // right rotation
+
+            } else {
+                // left-right rotation
+
+            }
         }
     }
     return new_root;
