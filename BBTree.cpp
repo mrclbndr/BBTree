@@ -7,7 +7,7 @@ BBTree::~BBTree() {
 }
 
 bool BBTree::search(const int key) const {
-    return isEmpty() && root->search(key);
+    return !isEmpty() && root->search(key);
 }
 
 void BBTree::insert(const int key) {

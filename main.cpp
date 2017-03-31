@@ -14,5 +14,8 @@ int main(int argc, char **argv) {
     tree->insert(3);
     tree->insert(1);
     tree->print();
+
+    std::cout << tree->search(10) << "\n";
+    std::cout << tree->search(2) << "\n";
     return 0;
 }
