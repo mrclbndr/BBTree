@@ -20,7 +20,7 @@ void BBTree::insert(const int key) {
 
 void BBTree::remove(const int key) {
     if (!isEmpty()) {
-        root->remove(key, alpha);
+        root = root->remove(key, alpha);
     }
 }
 
@@ -48,7 +48,6 @@ bool BBTree::Node::search(const int key) const {
 }
 
 BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
-    Node *new_root = this;
     if (key < this->key) {
         left = left == nullptr
                ? new Node(key)
@@ -58,37 +57,42 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
                 ? new Node(key)
                 : right->insert(key, alpha);
     }
-    if (key != this->key) {
-        recalculate_weight_balance();
-        if (balance < alpha) {
-            // right partial tree heavier than left one
-            double d = (1 - 2 * alpha) / (1 - alpha);
-            if (balance <= d) {
-                // left rotation
-                new_root = rotate_left();
-            } else {
-                // right-left rotation
-                left = left->rotate_left();
-                new_root = rotate_right();
-            }
-        } else if (balance > 1 - alpha) {
-            // left partial tree heavier than right one
-            double d = alpha / (1 - alpha);
-            if (balance > d) {
-                // right rotation
-                new_root = rotate_right();
-            } else {
-                // left-right rotation
-                right = right->rotate_right();
-                new_root = rotate_left();
-            }
-        }
-    }
-    return new_root;
+    return key == this->key
+           ? this
+           : rebalance(alpha);
 }
 
 BBTree::Node *BBTree::Node::remove(const int key, const double alpha) {
     return this;
+}
+
+BBTree::Node *BBTree::Node::rebalance(const double alpha) {
+    Node *new_root = this;
+    recalculate_weight_balance();
+    if (balance < alpha) {
+        // right partial tree heavier than left one
+        double d = (1 - 2 * alpha) / (1 - alpha);
+        if (balance <= d) {
+            // left rotation
+            new_root = this->rotate_left();
+        } else {
+            // right-left rotation
+            left = left->rotate_left();
+            new_root = this->rotate_right();
+        }
+    } else if (balance > 1 - alpha) {
+        // left partial tree heavier than right one
+        double d = alpha / (1 - alpha);
+        if (balance > d) {
+            // right rotation
+            new_root = this->rotate_right();
+        } else {
+            // left-right rotation
+            right = right->rotate_right();
+            new_root = this->rotate_left();
+        }
+    }
+    return new_root;
 }
 
 void BBTree::Node::recalculate_weight_balance() {

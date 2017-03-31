@@ -16,6 +16,7 @@ private:
         bool search(const int) const;
         Node *insert(const int, const double);
         Node *remove(const int, const double);
+        Node *rebalance(const double);
         void recalculate_weight_balance();
         Node *rotate_left();
         Node *rotate_right();
