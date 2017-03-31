@@ -66,10 +66,10 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
             if (balance <= d) {
                 // left rotation
                 new_root = rotate_left();
-//            } else {
-//                // right-left rotation
-//                left = left->rotate_left();
-//                new_root = rotate_right();
+            } else {
+                // right-left rotation
+                left = left->rotate_left();
+                new_root = rotate_right();
             }
         } else if (balance > 1 - alpha) {
             // left partial tree heavier than right one
@@ -77,10 +77,10 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
             if (balance > d) {
                 // right rotation
                 new_root = rotate_right();
-//            } else {
-//                // left-right rotation
-//                right = right->rotate_right();
-//                new_root = rotate_left();
+            } else {
+                // left-right rotation
+                right = right->rotate_right();
+                new_root = rotate_left();
             }
         }
     }

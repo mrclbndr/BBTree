@@ -19,6 +19,11 @@ int main(int argc, char **argv) {
     tree->insert(9);
     tree->insert(10);
     tree->print();
+    std::cout << "\n";
+    tree->insert(1000);
+    tree->insert(1001);
+    tree->insert(2000);
+    tree->print();
 
     return 0;
 }
