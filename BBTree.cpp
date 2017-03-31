@@ -14,7 +14,7 @@ void BBTree::insert(const int key) {
     if (isEmpty()) {
         root = new Node(key);
     } else {
-        root->insert(key, alpha);
+        root = root->insert(key, alpha);
     }
 }
 
@@ -59,34 +59,28 @@ BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {
                 : right->insert(key, alpha);
     }
     if (key != this->key) {
-        int weight_left = left == nullptr
-                          ? 1
-                          : left->weight;
-        weight = weight_left;
-        weight += right == nullptr
-                           ? 1
-                           : right->weight;
-
-        double root_balance = weight_left / weight;
-        if (root_balance < alpha) {
+        recalculate_weight_balance();
+        if (balance < alpha) {
             // right partial tree heavier than left one
-            double d = (1 - 2 * alpha) / (1 - alpha); // S. 35f.
-            if (root_balance <= d) {
+            double d = (1 - 2 * alpha) / (1 - alpha);
+            if (balance <= d) {
                 // left rotation
-
-            } else {
-                // right-left rotation
-
+                new_root = rotate_left();
+//            } else {
+//                // right-left rotation
+//                left = left->rotate_left();
+//                new_root = rotate_right();
             }
-        } else if (root_balance > 1 - alpha) {
+        } else if (balance > 1 - alpha) {
             // left partial tree heavier than right one
-            double d = alpha / (1-alpha); // S. 35f.
-            if (root_balance > d) {
+            double d = alpha / (1 - alpha);
+            if (balance > d) {
                 // right rotation
-
-            } else {
-                // left-right rotation
-
+                new_root = rotate_right();
+//            } else {
+//                // left-right rotation
+//                right = right->rotate_right();
+//                new_root = rotate_left();
             }
         }
     }
@@ -97,11 +91,40 @@ BBTree::Node *BBTree::Node::remove(const int key, const double alpha) {
     return this;
 }
 
+void BBTree::Node::recalculate_weight_balance() {
+    int weight_left = left == nullptr
+                      ? 1
+                      : left->weight;
+    weight = weight_left;
+    weight += right == nullptr
+              ? 1
+              : right->weight;
+    balance = (double) weight_left / weight;
+}
+
+BBTree::Node *BBTree::Node::rotate_left() {
+    Node *new_root = right;
+    right = right->left;
+    recalculate_weight_balance();
+    new_root->left = this;
+    new_root->recalculate_weight_balance();
+    return new_root;
+}
+
+BBTree::Node *BBTree::Node::rotate_right() {
+    Node *new_root = left;
+    recalculate_weight_balance();
+    left = left->right;
+    new_root->right = this;
+    new_root->recalculate_weight_balance();
+    return new_root;
+}
+
 void BBTree::Node::print(int depth, bool left_child) {
     for (int i = 0; i < depth; i++) {
         std::cout << "  ";
     }
-    std::cout << "+-" << key << "\t\t\tW(p)=" << weight << "\n";
+    std::cout << "+-" << key << "\n";
     if (left == nullptr) {
         for (int i = 0; i < depth + 1; i++) {
             std::cout << "  ";

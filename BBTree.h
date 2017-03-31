@@ -10,11 +10,15 @@ private:
         Node *left = nullptr;
         Node *right = nullptr;
         int weight = 2; // Anzahl Blätter
+        double balance = (double) 1 / weight;
         Node(const int k) : key(k) {}
         Node(const int k, Node *l, Node *r) : key(k), left(l), right(r) {}
         bool search(const int) const;
         Node *insert(const int, const double);
         Node *remove(const int, const double);
+        void recalculate_weight_balance();
+        Node *rotate_left();
+        Node *rotate_right();
         void print(int, bool);
 
         virtual ~Node();
