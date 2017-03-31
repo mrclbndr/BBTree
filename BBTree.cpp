@@ -7,13 +7,11 @@ BBTree::~BBTree() {
 }
 
 bool BBTree::search(const int key) const {
-    return root == nullptr
-           ? false
-           : root->search(key);
+    return isEmpty() && root->search(key);
 }
 
 void BBTree::insert(const int key) {
-    if (root == nullptr) {
+    if (isEmpty()) {
         root = new Node(key);
     } else {
         root->insert(key, alpha);
@@ -21,15 +19,19 @@ void BBTree::insert(const int key) {
 }
 
 void BBTree::remove(const int key) {
-    if (root != nullptr) {
+    if (!isEmpty()) {
         root->remove(key, alpha);
     }
 }
 
 void BBTree::print() {
-    if (root != nullptr) {
+    if (!isEmpty()) {
         root->print(0, false);
     }
+}
+
+bool BBTree::isEmpty() const {
+    return root == nullptr;
 }
 
 // Node
@@ -41,8 +43,8 @@ BBTree::Node::~Node() {
 bool BBTree::Node::search(const int key) const {
     return this->key == key
            || (key < this->key
-               ? left->search(key)
-               : right->search(key));
+               ? left != nullptr && left->search(key)
+               : right != nullptr && right->search(key));
 }
 
 BBTree::Node *BBTree::Node::insert(const int key, const double alpha) {

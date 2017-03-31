@@ -23,6 +23,8 @@ private:
     const double alpha;
     Node *root;
 
+    bool isEmpty() const;
+
 public:
 
     BBTree(const double a) : alpha(a) {}
