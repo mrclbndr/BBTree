@@ -24,7 +24,7 @@ void BBTree::remove(const int key) {
 
 void BBTree::print() {
     if (!isEmpty()) {
-        root->print(0, false);
+        root->print(0);
     }
 }
 
@@ -153,7 +153,7 @@ BBTree::Node *BBTree::Node::rotate_right() {
     return new_root;
 }
 
-void BBTree::Node::print(int depth, bool left_child) {
+void BBTree::Node::print(int depth) {
     for (int i = 0; i < depth; i++) {
         std::cout << "  ";
     }
@@ -164,7 +164,7 @@ void BBTree::Node::print(int depth, bool left_child) {
         }
         std::cout << "+-\n";
     } else {
-        left->print(depth + 1, true);
+        left->print(depth + 1);
     }
     if (right == nullptr) {
         for (int i = 0; i < depth + 1; i++) {
@@ -172,6 +172,6 @@ void BBTree::Node::print(int depth, bool left_child) {
         }
         std::cout << "+-\n";
     } else {
-        right->print(depth + 1, false);
+        right->print(depth + 1);
     }
 }

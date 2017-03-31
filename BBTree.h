@@ -20,7 +20,7 @@ private:
         void recalculate_weight_balance();
         Node *rotate_left();
         Node *rotate_right();
-        void print(int, bool);
+        void print(int);
 
         virtual ~Node();
     };
