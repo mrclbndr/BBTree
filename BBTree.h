@@ -15,6 +15,9 @@ private:
         bool search(const int) const;
         Node *insert(const int, const double);
         Node *remove(const int, const double);
+        void print(int, bool);
+
+        virtual ~Node();
     };
 
     const double alpha;
@@ -27,7 +30,9 @@ public:
     bool search(const int) const;
     void insert(const int);
     void remove(const int);
+    void print();
 
+    virtual ~BBTree();
 };
 
 #endif //BBTREE_BBTREE_H
